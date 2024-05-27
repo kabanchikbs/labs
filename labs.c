@@ -14,31 +14,24 @@ int labaone(void) {
   return 0;
 }
 
-int onedop(void) {
-    fon(); 
+int onedop() {
+    f(); 
     return 0;
 }
-void fon() {
-    float v1, V, t, v2;
+void f() {
 
-    printf("v1: ");
+    int v1, v2, t, V;
     scanf("%f", &v1);
-
-    printf("V: ");
     scanf("%f", &V);
-
-    printf("t: ");
     scanf("%f", &t);
-    
-    v2 = v1 - (V / t);
 
-    printf("answer = %.2f\n", v2);
+    
+    v2 = v1-(V/t); 
+
+    printf("answer = %f\n", v2);
 }
 
-
-
-int labatwo(void) 
-{ 
+int labatwo(void) { 
     int n,i; 
     double s, a, del; 
     s = 0; 
@@ -57,30 +50,22 @@ int labatwo(void)
     return 0; 
 }
 
-int twodop(void) {
+int twodop(void) 
+{
     int n;
-    double s, a, d, epsilon;
+    double s, a, d;
     s = 0;
     scanf("%d", &n);
-    printf("eps ");
-    scanf("%lf", &epsilon);
     d = 2;
-
+ 
     for (int i = 0; i < n; i++) {
-        a = (1.0 + i) / (d * d);
-        if (a < 0) {
-            a = -a;
-        }
-        if (a < epsilon) {
-            printf(" %f\n", a);
-            break;
-        }
+        a = (1 + i) / (d * d);
         s += a;
         d += 1;
     }
-
-    printf(" %f\n", s);
-
+    
+    printf("s = %f\n", s);
+ 
     return 0; 
 }
 
@@ -121,6 +106,16 @@ int labathree(void) {
     
 }
 
+int isVowel(char c) {
+    switch (c) {
+        case 'a': case 'e': case 'i': case 'o': case 'u':
+        case 'A': case 'E': case 'I': case 'O': case 'U':
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 int threedop(void) {
     int words = 0;
     int letters = 0;
@@ -137,7 +132,7 @@ int threedop(void) {
             letters = 0;
             wordContainsVowel = 0;
         } else {
-            if (!f2(ch)) {
+            if (!isVowel(ch)) {
                 letters++;
             } else {
                 wordContainsVowel = 1;
@@ -158,30 +153,8 @@ int threedop(void) {
 
     return 0;
 }
-int f2(char c) {
-    switch (c) {
-        case 'a': case 'e': case 'i': case 'o': case 'u':
-        case 'A': case 'E': case 'I': case 'O': case 'U':
-            return 1;
-        default:
-            return 0;
-    }
-}
 
-
-
-int labafour(void) {
-    char str[100];
-    printf("Введите строку: ");
-    fgets(str, 100, stdin);
-
-    f3(str);
-
-    printf("Строка после удаления слов: %s\n", str);
-
-    return 0;
-}
-void f3(char str[]) {
+void removeOddLengthWords(char str[]) {
     int i = 0, j = 0, start = 0, wordSize = 0;
     while (str[i]) {
         if (str[i] != ' ') {
@@ -195,7 +168,7 @@ void f3(char str[]) {
                     str[j++] = str[k];
                 }
                 if (str[i] && str[i] != ' ') {
-                    str[j++] = ' ';
+                    str[j++] = ' '; // Добавляем пробел между словами
                 }
             }
             wordSize = 0;
@@ -204,9 +177,52 @@ void f3(char str[]) {
             i++;
         }
     }
-    str[j ? j - 1 : j] = '\0'; 
+    str[j ? j - 1 : j] = '\0'; // Оптимизация: обрезаем лишний пробел перед завершающим нулевым символом
 }
 
+int labafour(void) {
+    char str[100];
+    printf("Введите строку: ");
+    fgets(str, 100, stdin);
+
+    removeOddLengthWords(str);
+
+    printf("Строка после удаления слов c нечетным количеством букв: %s\n", str);
+
+    return 0;
+}
+
+void analyze_string(char *str) {
+  struct Stats {
+    int spec_chars;
+    int letters;
+    int digits;
+  } stats = {0};
+
+  while (*str) {
+    if (*str == ' ' || (*str < '0' || *str > '9') && (*str < 'a' || *str > 'z') && (*str < 'A' || *str > 'Z')) {
+      stats.spec_chars++;
+    } else if ((*str >= 'a' && *str <= 'z') || (*str >= 'A' && *str <= 'Z')) {
+      stats.letters++;
+    } else if (*str >= '0' && *str <= '9') {
+      stats.digits++;
+    }
+    str++;
+  }
+
+  int max_count = stats.spec_chars;
+  char *max_type = "символов";
+  if (stats.letters > max_count) {
+    max_count = stats.letters;
+    max_type = "букв";
+  }
+  if (stats.digits > max_count) {
+    max_count = stats.digits;
+    max_type = "цифр";
+  }
+
+  printf("Больше всего %s: %d\n", max_type, max_count);
+}
 
 int fourdop(void) {
   char str[100];
@@ -214,42 +230,9 @@ int fourdop(void) {
   printf("Введите строку: ");
   fgets(str, 100, stdin);
 
-  f4(str);
+  analyze_string(str);
 
-return 0;
-}
-struct Stats {
-    int spec_chars;
-    int letters;
-    int digits;
-};
-void f4(char *str) {
-    struct Stats stats = {0};
-
-    while (*str) {
-        if (*str == ' ' || (*str < '0' && *str > '9') && (*str < 'a' && *str > 'z') && (*str < 'A' && *str > 'Z')) {
-            stats.spec_chars++;
-        } else if ((*str >= 'a' && *str <= 'z') || (*str >= 'A' && *str <= 'Z')) {
-            stats.letters++;
-        } else if (*str >= '0' && *str <= '9') {
-            stats.digits++;
-        }
-        str++;
-    }
-    
-    int max_count = stats.spec_chars;
-    char *max_type = "символов";
-
-    if (stats.letters > max_count) {
-        max_count = stats.letters;
-        max_type = "букв";
-    }
-    if (stats.digits > max_count) {
-        max_count = stats.digits;
-        max_type = "цифр";
-    }
-
-    printf("Больше всего %s: %d\n", max_type, max_count);
+  return 0;
 }
 
 int labafive(void) {
@@ -279,10 +262,10 @@ int labafive(void) {
     }
 
     printf("после:\n");
-        for (i = 0; i < 10; i++) {
-            printf("%d ", arr[i]);
-        }
-        printf("\n");
+    for (i = 0; i < 10; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
 
     return 0;
 }
@@ -305,14 +288,13 @@ int fivedop(void) {
 
     // если нет - обнуляем
     if (!is_regression) {
-            for (i = 0; i < 10; i++) 
-                arr[i] = 0;
-            
-            printf("регрессия отсутсвует\n");
+        for (i = 0; i < 10; i++) {
+            arr[i] = 0;
+        }
+        printf("регрессия отсутсвует\n");
+    } else {
+        printf("регрессия есть\n");
     }
-        else
-            printf("регрессия есть\n");
-
 
     printf("массив: ");
     for (i = 0; i < 10; i++) {
@@ -388,91 +370,68 @@ int labasix(void) {
   return 0;
 }
 
-int sixdop(void) {
-    return sixx();
-}
-void bubbleSort(int *array, int size) {
-    for (int step = 0; step < size - 1; ++step) {
-        for (int i = 0; i < size - step - 1; ++i) {
+
+#include <stdio.h>
+
+void shakerSort(int *array, int size) {
+    int left = 0, right = size - 1;
+    int temp, i;
+    while (left < right) {
+        for (i = left; i < right; i++) {
             if (array[i] > array[i + 1]) {
-                int temp = array[i];
+                temp = array[i];
                 array[i] = array[i + 1];
                 array[i + 1] = temp;
             }
         }
+        right--;
+        for (i = right; i > left; i--) {
+            if (array[i] < array[i - 1]) {
+                temp = array[i];
+                array[i] = array[i - 1];
+                array[i - 1] = temp;
+            }
+        }
+        left++;
     }
 }
-int sixx(void) {
 
-  int N, K;
+int sixdop(void) {
+    int N, M;
 
-  printf("строки N: ");
-  scanf("%d", &N);
+    printf("строки: ");
+    scanf("%d", &N);
 
-  printf("столбцы K: ");
-  scanf("%d", &K);
+    printf("столбцы: ");
+    scanf("%d", &M);
 
-  int arr[N][K];
+    int array[N][M];
+    int flatArray[N * M];
 
-  printf("элементы:\n");
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < K; j++) {
-      scanf("%d", &arr[i][j]);
+    printf("ввод:\n");
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            scanf("%d", &array[i][j]);
+        }
     }
-    bubbleSort(arr[i], K);  
-  }
 
-  int isProgression = 1; 
-  int prevDiff = 0; 
-  int currentDiff; 
-
-  for (int i = 0; i < N; i++) {
-    for (int j = 1; j < K; j++) {
-      currentDiff = arr[i][j] - arr[i][j - 1];
-
-      if (j == 1) {
-        prevDiff = currentDiff; 
-      } else if (currentDiff != prevDiff) {
-        isProgression = 0;
-        printf("прогрессии нет\n");
-        return 0; 
-      }
+    int k = 0;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            flatArray[k++] = array[i][j];
+        }
     }
-  }
 
-  if (isProgression) {
-    printf("прогрессия есть\n");
-  }
+    shakerSort(flatArray, N * M);
 
-  return 0;
+    printf("результат:\n");
+    for (int i = 0; i < N * M; i++) {
+        printf("%d ", flatArray[i]);
+    }
+    printf("\n");
 }
+ 
 
-int labaseven(void) {
-  long N;
-
-  printf("ввод: ");
-  scanf("%lld", &N);
-
-  printf("двоич: ", N);
-  toBinary(N);
-  printf("\n");
-
-  if (symmetria(N)) {
-    printf("%lld симметрично.\n", N);
-  } else {
-    printf("%lld симметрично.\n", N);
-  }
-
-  return 0;
-
-}
-void toBinary(long n) {
-if (n == 0) {
-    return; 
-}
-toBinary(n / 2);
- printf("%lld", n % 2); 
-}
 int symmetria(long N) {
   if (N < 0) {
     N = -N;
@@ -487,4 +446,40 @@ int symmetria(long N) {
   }
 
   return reversN == origN;
+}
+void toBinary(long n) {
+  int num_bits = sizeof(long) * 8; 
+  int leading_zero = 1; 
+
+  for (int i = num_bits - 1; i >= 0; --i) {
+    int bit = (n >> i) & 1;
+    if (bit) {
+      leading_zero = 0; 
+    }
+    if (!leading_zero) {
+      printf("%d", bit);
+    }
+  }
+  
+  if (leading_zero) {
+    printf("0");
+  }
+}
+int labaseven(void) {
+  long N;
+
+  printf("ввод: ");
+  scanf("%X", &N);
+
+  printf("двоич: ");
+  toBinary(N);
+  printf("\n");
+
+  if (symmetria(N)) {
+    printf("%ld симметрично.\n", N);
+  } else {
+    printf("%ld не симметрично.\n", N);
+  }
+
+  return 0;
 }
